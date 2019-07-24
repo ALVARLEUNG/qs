@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0" >
+    <xsl:template match="/">
+        <html xmlns="http://www.w3.org/1999/xhtml">
+            <head>
+                <title>ResultDetail</title>
+                <style type="text/css">
+                    @page {
+                        size: 210mm 297mm;
+                    }
+                    .title {
+                        font-size: 90%;
+                        font-weight:bold;
+                        text-align: center;
+                    }
+                    .userInformation {
+                        font-size: 80%;
+                        font-weight:bold;
+                        display: inline-block;
+                        margin-left: 25px;
+                    }
+                    .answerInformation {
+                        font-size: 60%;
+                        font-weight:bold;
+                        margin-top: 5px;
+                    }
+                </style>
+            </head>
+
+            <body style="font-size:12.0pt; font-family: SimSun">
+                <xsl:for-each select="ResultDetailDo">
+                    <div class="title">
+                        <xsl:value-of select="assessmentName"/>
+                    </div>
+                    <div class="userInformation">
+                        <span>状态:</span>
+                        <xsl:if test="status = 'In Progress'">正在进行中</xsl:if>
+                        <xsl:if test="status = 'Sent'">已发送</xsl:if>
+                        <xsl:if test="status = 'Completed'">已完成</xsl:if>
+                    </div>
+                    <div class="userInformation">
+                        <span>类型:</span>
+                        <xsl:value-of select="category"/>
+                    </div>
+                    <div class="userInformation">
+                        <span>组织:</span>
+                        <xsl:value-of select="organization"/>
+                    </div>
+                    <div class="userInformation">
+                        <span>姓名:</span>
+                        <xsl:value-of select="name"/>
+                    </div>
+
+                    <div class="userInformation">
+                        <span>分数:</span>
+                        <xsl:value-of select="score"/>
+                    </div>
+                    <br/>
+                    <br/>
+                    <!--PDF-Body-->
+                    <xsl:for-each select="sectionList/SectionDo">
+                        <div style="font-size: 80%;font-weight:bold;">
+                            <xsl:value-of select="section"/>
+                        </div>
+                        <br/>
+                        <xsl:for-each select="questionDoList/QuestionDo">
+                            <div style="font-size: 70%;font-weight:bold;">
+                                <span>
+                                    <xsl:number value="position()" format="1."/>
+                                </span>
+                                <span style="margin-left: 10px;margin-top: -10px">
+                                    <xsl:value-of select="question"/>
+                                </span>
+                            </div>
+                            <xsl:for-each select="optionList/String">
+                                <div style="font-size: 70%;font-weight:bold;margin-top: 5px;display: inline-block;margin-left: 25px">
+                                    <xsl:value-of select="text()"  disable-output-escaping="yes"/>
+                                </div>
+                            </xsl:for-each>
+                            <div class="answerInformation">
+                                答案:
+                                <div style="display: inline-block;margin-right: 25px">
+                                    <xsl:value-of select="answerOption"/>
+                                </div>
+                            </div>
+                            <div class="answerInformation">
+                                分数:
+                                <xsl:value-of select="score"/>
+                            </div>
+
+                            <div class="answerInformation">
+                                敏感:
+                                <xsl:value-of select="alerted"/>
+                            </div>
+                            <br/>
+                        </xsl:for-each>
+                    </xsl:for-each>
+                </xsl:for-each>
+            </body>
+        </html>
+    </xsl:template>
+</xsl:stylesheet>
